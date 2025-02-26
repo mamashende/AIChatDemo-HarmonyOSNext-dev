@@ -1,3 +1,4 @@
+import {makeChat} from "../api/OpenAIChat"
 @Entry
 @Component
 struct Index {
@@ -5,13 +6,13 @@ struct Index {
 
   build() {
     RelativeContainer() {
-      Text(this.message)
-        .id('HelloWorld')
-        .fontSize(50)
-        .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
+
+
+      Text(this.message).height('100%')
+        .width('100%')
+        .onClick(async  () => {
+          let temp  = await makeChat({model:"qwen-plus"},[{role:"user",content:"who are you"}])
+          this.message = temp.content;
         })
     }
     .height('100%')
