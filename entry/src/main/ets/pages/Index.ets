@@ -1,15 +1,23 @@
 import {makeChat} from "../api/OpenAIChat"
 import {ConversationList} from "../components/sidebar/ConversationList"
 import {MainPage} from "../components/chat/Chat"
-@Entry
-@Component
-struct Index {
-  @State message: string = 'Hello World';
+import {ConversationID} from "../common/class/ConversationID"
+import { AppStorageV2 } from "@kit.ArkUI"
 
+@Entry
+@ComponentV2
+struct Index {
+
+  @Local currentID : ConversationID = new ConversationID();
+  aboutToAppear(): void {
+    this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
+    this.currentID.id = "114514"
+    console.log("chat inspect in index",JSON.stringify(this.currentID))
+  }
   build() {
     RelativeContainer() {
 
-      SideBarContainer(SideBarContainerType.Overlay){
+      SideBarContainer(SideBarContainerType.Embed){
         Column(){
 
           ConversationList()

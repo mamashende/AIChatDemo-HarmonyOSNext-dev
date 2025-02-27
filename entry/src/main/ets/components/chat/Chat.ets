@@ -1,7 +1,10 @@
-import { promptAction } from '@kit.ArkUI';
+import { AppStorageV2, promptAction } from '@kit.ArkUI';
 import {Message} from "../../common/entities/Message"
 
 import {makeChat} from "../../api/OpenAIChat"
+import {ConvList} from "../../common/class/ConvListClass"
+import {ConversationID} from "../../common/class/ConversationID"
+import {waitUntillOk} from "../../common/functions/Chat/Wait"
 /**
  * 消息类型
  */
@@ -27,6 +30,12 @@ export struct MainPage {
   @Local scrollHeight: number = 0
   userInputMessage : Message  = {role:"user",content:""};
   MessageList : Message[] = [];
+  /**
+   * 全局变量
+   */
+  @Local  currentID : ConversationID = {id:"11111"}
+
+
   bgc: string = '#C8EE9D'
   TextAreaController: TextAreaController = new TextAreaController()
   listScroller: Scroller = new Scroller()
@@ -35,7 +44,7 @@ export struct MainPage {
    * 消息列表:messageType[]
    */
   @Local messages: messageType[] = [
-    { role: 'assistant', context: '你好，我是你的智能助手，你可以向我提问任何问题' },
+    { role: 'assistant', context: "hello"  },
   ]
   /**
    * 输入框内容:string
@@ -53,9 +62,16 @@ export struct MainPage {
    * 页面展示
    */
   onPageShow() {
+
     this.changeScrollHeight()
   }
+  async  aboutToAppear(): Promise<void> {
 
+    this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!
+    await waitUntillOk(this.currentID.id);
+    console.log("chat inspect in chat",JSON.stringify(this.currentID))
+    this.messages[0].context = this.messages[0].context + this.currentID
+  }
   /**
    * 改变输入框的Scroll容器的高度
    */

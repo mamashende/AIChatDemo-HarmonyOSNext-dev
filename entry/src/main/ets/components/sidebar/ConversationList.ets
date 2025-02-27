@@ -5,6 +5,9 @@ import {createNewTabInfo} from "../../common/functions/sideBar/TabBar"
 import { AppStorageV2 } from '@kit.ArkUI';
 import {ConvList} from "../../common/class/ConvListClass"
 import {KvUtil,ToastUtil} from '@pura/harmony-utils'
+import {ConversationID} from "../../common/class/ConversationID"
+
+
 @ComponentV2
 @Preview
 export struct ConversationList {
@@ -12,14 +15,17 @@ export struct ConversationList {
   //@Local counter : number = 1;
   initInfo : ConversationBasicInfo = createNewTabInfo()
   //@Local conversationInfoList : ConversationBasicInfo[] = [this.initInfo]
-
-  @Local covList :ConvList = new ConvList()
+  @Local currentID : ConversationID = new ConversationID()
+  private  covList :ConvList = new ConvList()
   async  aboutToAppear(): Promise<void> {
-    this.covList = AppStorageV2.connect(ConvList,() => this.covList)!;
+    //this.covList = AppStorageV2.connect(ConvList,() => this.covList)!;
+    this.currentID = AppStorageV2.connect(ConversationID,() => this.currentID)!;
     this.covList = await ConvList.create()
+    //this.currentID.id = this.covList.currentConvID
     console.log("gcb28")
     console.log("gcb28",JSON.stringify(this.covList))
     console.log("gcb28",this.covList.currentConvID)
+    console.log("chat inspect in conv",JSON.stringify(this.currentID))
     if (this.covList.currentConvID === '') {
 
       this.covList.conversationInfoList.unshift(this.initInfo)
@@ -40,10 +46,17 @@ export struct ConversationList {
                 this.covList.conversationInfoList.splice(index,1)
                 if (this.covList.conversationInfoList.length !== 0) {
                   this.covList.currentConvID = this.covList.conversationInfoList[0].id;
+                  this.currentID.id = this.covList.currentConvID
+                } else {
+                  let temp = createNewTabInfo()
+                  this.covList.conversationInfoList.unshift(temp)
+                  this.covList.currentConvID = temp.id
+                  this.currentID.id = this.covList.currentConvID
                 }
               },
               clickAndSwitch : (id : string) => {//switch currentConvID onClick
                   this.covList.currentConvID = id
+                  this.currentID.id = this.covList.currentConvID
                   console.log("gcb28",this.covList.currentConvID)
               }
             })

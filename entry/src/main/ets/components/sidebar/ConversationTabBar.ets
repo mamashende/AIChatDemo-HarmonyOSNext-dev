@@ -3,6 +3,7 @@ import {ConversationBasicInfo} from "../../common/entities/ConversationBasicInfo
 import {ConvList} from "../../common/class/ConvListClass"
 import { AppStorageV2 } from "@kit.ArkUI";
 import {KvUtil,ToastUtil} from '@pura/harmony-utils'
+import {ConversationID} from "../../common/class/ConversationID"
 @ComponentV2
 @Preview
 export struct ConversationTabBar {
@@ -10,10 +11,11 @@ export struct ConversationTabBar {
   @Event deleteSelf : (id : string) => void = () => {};
   @Event clickAndSwitch : (id : string) => void = () => {}
   //convlist : ConvList  = AppStorageV2.connect(ConvList,() => new ConvList())!;
-
+  //currentID : ConversationID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
   aboutToAppear(): void {
     //ToastUtil.showLong(JSON.stringify(this.convlist))
-    //console.log("gcb28 child",JSON.stringify(this.convlist.conversationInfoList.length))
+    //console.log("gcb28 child",this.convlist.currentConvID)
+    //console.log("chat inspect in conv child",JSON.stringify(this.currentID))
   }
   build() {
     Column({space:10}){
