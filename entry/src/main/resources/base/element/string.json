@@ -6,11 +6,11 @@
     },
     {
       "name": "EntryAbility_desc",
-      "value": "chat with all kinds of llms"
+      "value": "description"
     },
     {
       "name": "EntryAbility_label",
-      "value": "AIChatApp"
+      "value": "label"
     }
   ]
 }

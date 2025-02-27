@@ -1,4 +1,6 @@
 import {makeChat} from "../api/OpenAIChat"
+import {ConversationList} from "../components/sidebar/ConversationList"
+import {MainPage} from "../components/chat/Chat"
 @Entry
 @Component
 struct Index {
@@ -7,13 +9,26 @@ struct Index {
   build() {
     RelativeContainer() {
 
+      SideBarContainer(SideBarContainerType.Overlay){
+        Column(){
 
-      Text(this.message).height('100%')
-        .width('100%')
-        .onClick(async  () => {
-          let temp  = await makeChat({model:"qwen-plus"},[{role:"user",content:"who are you"}])
-          this.message = temp.content;
-        })
+          ConversationList()
+        }
+        .width("30%")
+        .height("100%")
+
+
+        Column(){
+          //MyCounter()
+          MainPage()
+
+        }
+        .width("100%")
+        .height("100%")
+      }
+
+
+
     }
     .height('100%')
     .width('100%')
