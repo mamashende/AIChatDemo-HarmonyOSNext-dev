@@ -21,9 +21,9 @@ export struct ConversationList {
   //@Param  localvisibility :Visibility = Visibility.Visible
   async  aboutToAppear(): Promise<void> {
     //this.covList = AppStorageV2.connect(ConvList,() => this.covList)!;
-    this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
+    //this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
     this.covList = await ConvList.create()
-    this.currentID.id = this.covList.currentConvID
+    this.currentID.conversationId = this.covList.currentConvID
     ToastUtil.showLong(JSON.stringify(this.currentID))
     //console.log("gcb28")
     //console.log("gcb28",JSON.stringify(this.covList))
@@ -48,18 +48,18 @@ export struct ConversationList {
                 this.covList.conversationInfoList.splice(index,1)
                 if (this.covList.conversationInfoList.length !== 0) {
                   this.covList.currentConvID = this.covList.conversationInfoList[0].id;
-                  this.currentID.id = this.covList.currentConvID
+                  this.currentID.conversationId = this.covList.currentConvID
                 } else {
                   let temp = createNewTabInfo()
                   this.covList.conversationInfoList.unshift(temp)
                   this.covList.currentConvID = temp.id
-                  this.currentID.id = this.covList.currentConvID
+                  this.currentID.conversationId = this.covList.currentConvID
                 }
               },
               clickAndSwitch : (id : string) => {//switch currentConvID onClick
                   this.covList.currentConvID = id
-                  this.currentID.id = this.covList.currentConvID
-                  console.log("gcb28",this.currentID.id)
+                  this.currentID.conversationId = this.covList.currentConvID
+                  console.log("gcb28",this.currentID.conversationId)
               }
             })
           }
@@ -71,7 +71,7 @@ export struct ConversationList {
           let temp = createNewTabInfo()
           this.covList.conversationInfoList.unshift(temp)
           this.covList.currentConvID = temp.id
-          this.currentID.id = temp.id
+          this.currentID.conversationId = temp.id
           console.log("gcb28",JSON.stringify(this.covList))
           //this.conversationTitleList.push(`对话${this.counter}`)
           //this.counter += 1;

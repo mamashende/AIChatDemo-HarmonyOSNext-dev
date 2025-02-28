@@ -22,6 +22,10 @@ struct Index {
   build() {
     RelativeContainer() {
 
+      MainPage()
+
+      ConversationList()
+      /*
       Stack({alignContent:Alignment.TopStart}){
         Column(){
           //MyCounter()
@@ -67,5 +71,10 @@ struct Index {
     }
     .height('100%')
     .width('100%')
+
+  }
+  *
+  */
+    }
   }
 }

@@ -33,7 +33,7 @@ export struct MainPage {
   /**
    * 全局变量
    */
-  @Local  currentID : ConversationID = new ConversationID()
+  private   currentID : ConversationID = new ConversationID()
 
 
   bgc: string = '#C8EE9D'
