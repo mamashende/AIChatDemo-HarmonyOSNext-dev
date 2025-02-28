@@ -15,18 +15,20 @@ export struct ConversationList {
   //@Local counter : number = 1;
   initInfo : ConversationBasicInfo = createNewTabInfo()
   //@Local conversationInfoList : ConversationBasicInfo[] = [this.initInfo]
-  @Local currentID : ConversationID = new ConversationID()
+  private  currentID : ConversationID = new ConversationID()
   @Event clickAndSwitch : (id : string) => void = () => {};
   @Local  covList :ConvList = new ConvList()
+  //@Param  localvisibility :Visibility = Visibility.Visible
   async  aboutToAppear(): Promise<void> {
     //this.covList = AppStorageV2.connect(ConvList,() => this.covList)!;
-    this.currentID = AppStorageV2.connect(ConversationID,() => this.currentID)!;
+    this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
     this.covList = await ConvList.create()
-    //this.currentID.id = this.covList.currentConvID
+    this.currentID.id = this.covList.currentConvID
+    ToastUtil.showLong(JSON.stringify(this.currentID))
     //console.log("gcb28")
     //console.log("gcb28",JSON.stringify(this.covList))
     //console.log("gcb28",this.covList.currentConvID)
-    //console.log("chat inspect in conv",JSON.stringify(this.currentID))
+    console.log("chat inspect in conv",JSON.stringify(this.currentID))
     if (this.covList.currentConvID === '') {
 
       this.covList.conversationInfoList.unshift(this.initInfo)
@@ -75,6 +77,7 @@ export struct ConversationList {
           //this.counter += 1;
         })
     }
+
 
   }
 }

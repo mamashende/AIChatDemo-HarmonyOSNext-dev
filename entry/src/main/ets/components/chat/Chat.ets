@@ -33,7 +33,7 @@ export struct MainPage {
   /**
    * 全局变量
    */
-  @Local  currentID : ConversationID = {id:"11111"}
+  @Local  currentID : ConversationID = new ConversationID()
 
 
   bgc: string = '#C8EE9D'
@@ -68,9 +68,9 @@ export struct MainPage {
   async  aboutToAppear(): Promise<void> {
 
     this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!
-    await waitUntillOk(this.currentID.id);
+
     console.log("chat inspect in chat",JSON.stringify(this.currentID))
-    this.messages[0].context = this.messages[0].context + this.currentID
+
   }
   /**
    * 改变输入框的Scroll容器的高度
