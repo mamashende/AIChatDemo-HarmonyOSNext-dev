@@ -31,9 +31,9 @@ export struct MainPage {
   userInputMessage : Message  = {role:"user",content:""};
   MessageList : Message[] = [];
   /**
-   * 全局变量
+   * 被传导的变量
    */
-  @Local  currentID : ConversationID = new ConversationID()
+  @Param  currentID : ConversationID = new ConversationID()
 
 
   bgc: string = '#C8EE9D'
@@ -67,7 +67,7 @@ export struct MainPage {
   }
   async  aboutToAppear(): Promise<void> {
 
-    this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!
+    //this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!
 
     console.log("chat inspect in chat",JSON.stringify(this.currentID))
 

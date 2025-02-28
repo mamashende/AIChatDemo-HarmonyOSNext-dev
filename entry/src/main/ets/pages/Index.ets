@@ -10,14 +10,14 @@ import { AppStorageV2 } from "@kit.ArkUI"
 @ComponentV2
 struct Index {
 
-  //@Local currentID : ConversationID = new ConversationID();
+  @Local currentID : ConversationID = new ConversationID();
   @Local  localvisibility :Visibility = Visibility.Visible
   @Local switchButttomStatus : boolean = false;
 //  @Local Visibility :
   aboutToAppear(): void {
     //this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
     //this.currentID.id = "114514"
-    //console.log("chat inspect in index",JSON.stringify(this.currentID))
+    console.log("chat inspect in index",JSON.stringify(this.currentID))
   }
   build() {
     RelativeContainer() {
@@ -25,7 +25,7 @@ struct Index {
       Stack({alignContent:Alignment.TopStart}){
         Column(){
           //MyCounter()
-          MainPage()
+          MainPage({})
 
         }
         .width("100%")
