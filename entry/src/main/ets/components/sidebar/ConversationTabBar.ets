@@ -37,10 +37,10 @@ export struct ConversationTabBar {
         .width('5%')
         .height('5%')
         .offset({
-          x:80,
-          y:-80
+          x:100,
+          y:-90
         })
-        .borderRadius(100)
+        .borderRadius(20)
         .onClick(() => {
           //ToastUtil.showToast(JSON.stringify(this.convlist.conversationInfoList))
           this.deleteSelf(this.info.id)

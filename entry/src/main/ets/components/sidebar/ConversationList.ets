@@ -16,16 +16,17 @@ export struct ConversationList {
   initInfo : ConversationBasicInfo = createNewTabInfo()
   //@Local conversationInfoList : ConversationBasicInfo[] = [this.initInfo]
   @Local currentID : ConversationID = new ConversationID()
-  private  covList :ConvList = new ConvList()
+  @Event clickAndSwitch : (id : string) => void = () => {};
+  @Local  covList :ConvList = new ConvList()
   async  aboutToAppear(): Promise<void> {
     //this.covList = AppStorageV2.connect(ConvList,() => this.covList)!;
     this.currentID = AppStorageV2.connect(ConversationID,() => this.currentID)!;
     this.covList = await ConvList.create()
     //this.currentID.id = this.covList.currentConvID
-    console.log("gcb28")
-    console.log("gcb28",JSON.stringify(this.covList))
-    console.log("gcb28",this.covList.currentConvID)
-    console.log("chat inspect in conv",JSON.stringify(this.currentID))
+    //console.log("gcb28")
+    //console.log("gcb28",JSON.stringify(this.covList))
+    //console.log("gcb28",this.covList.currentConvID)
+    //console.log("chat inspect in conv",JSON.stringify(this.currentID))
     if (this.covList.currentConvID === '') {
 
       this.covList.conversationInfoList.unshift(this.initInfo)
@@ -40,7 +41,6 @@ export struct ConversationList {
       List({space:10}){
         ForEach(this.covList.conversationInfoList,(item : ConversationBasicInfo,index ?: number)=> {
           ListItem(){
-            if (item.id !== '')
             ConversationTabBar({info:item,deleteSelf:( id : string) => {//delete that item onClick
                 let index = this.covList.conversationInfoList.findIndex(item => item.id = id)
                 this.covList.conversationInfoList.splice(index,1)
@@ -57,7 +57,7 @@ export struct ConversationList {
               clickAndSwitch : (id : string) => {//switch currentConvID onClick
                   this.covList.currentConvID = id
                   this.currentID.id = this.covList.currentConvID
-                  console.log("gcb28",this.covList.currentConvID)
+                  console.log("gcb28",this.currentID.id)
               }
             })
           }
@@ -69,6 +69,7 @@ export struct ConversationList {
           let temp = createNewTabInfo()
           this.covList.conversationInfoList.unshift(temp)
           this.covList.currentConvID = temp.id
+          this.currentID.id = temp.id
           console.log("gcb28",JSON.stringify(this.covList))
           //this.conversationTitleList.push(`对话${this.counter}`)
           //this.counter += 1;

@@ -11,13 +11,13 @@ struct Index {
   @Local currentID : ConversationID = new ConversationID();
   aboutToAppear(): void {
     this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
-    this.currentID.id = "114514"
+    //this.currentID.id = "114514"
     console.log("chat inspect in index",JSON.stringify(this.currentID))
   }
   build() {
     RelativeContainer() {
 
-      SideBarContainer(SideBarContainerType.Embed){
+      SideBarContainer(SideBarContainerType.Overlay){
         Column(){
 
           ConversationList()
