@@ -1,50 +1,51 @@
 import { AppStorageV2, promptAction } from '@kit.ArkUI';
-import {Message} from "../../common/entities/Message"
+import { Message } from "../../common/entities/Message"
 
-import {makeChat} from "../../api/OpenAIChat"
-import {ConvList} from "../../common/class/ConvListClass"
-import {ConversationID} from "../../common/class/ConversationID"
-import {waitUntillOk} from "../../common/functions/Chat/Wait"
+import { makeChat } from "../../api/OpenAIChat"
+import { ConvList } from "../../common/class/ConvListClass"
+import { ConversationID } from "../../common/class/ConversationID"
+import { waitUntillOk } from "../../common/functions/Chat/Wait"
+import Constants from "../../common/constants/ConstantsDev"
+import { ConvDetail } from "../../common/class/ConvDetailClass"
+import { ChatMessage } from  "../../common/class/ConvDetailClass"
+import  {testBoard} from "../../components/test/testBoard"
 /**
  * 消息类型
  */
 
 
-
 @ObservedV2
 class messageType {
   role: string
-  @Trace context: string
+  @Trace content: string
 
   constructor() {
     this.role = 'user'
-    this.context = ''
+    this.content = ''
   }
 }
 
 
 @Preview
 @ComponentV2
-@Entry
+//@Entry
 export struct MainPage {
   @Local scrollHeight: number = 0
-  userInputMessage : Message  = {role:"user",content:""};
-  MessageList : Message[] = [];
+  userInputMessage: Message = { role: "user", content: "" };
+  MessageList: Message[] = [];
+  @Param currntConvDetail: ConvDetail = new ConvDetail();
   /**
    * 全局变量
    */
-  private   currentID : ConversationID = new ConversationID()
-
-
+  private currentID: ConversationID = AppStorageV2.connect(ConversationID, () => new ConversationID())!;
   bgc: string = '#C8EE9D'
   TextAreaController: TextAreaController = new TextAreaController()
   listScroller: Scroller = new Scroller()
-
   /**
    * 消息列表:messageType[]
    */
   @Local messages: messageType[] = [
-    { role: 'assistant', context: "hello"  },
+    { role: 'assistant', content: "hello" },
   ]
   /**
    * 输入框内容:string
@@ -56,8 +57,8 @@ export struct MainPage {
   allReplyMessages: string[] = [
     '你好，我是arkui，你可以向我提问任何问题',
   ]
+  testReply: string = "";
 
-  testReply : string = "";
   /**
    * 页面展示
    */
@@ -65,13 +66,18 @@ export struct MainPage {
 
     this.changeScrollHeight()
   }
-  async  aboutToAppear(): Promise<void> {
 
-    this.currentID = AppStorageV2.connect(ConversationID,() => new ConversationID())!
+  async aboutToAppear(): Promise<void> {
 
-    console.log("chat inspect in chat",JSON.stringify(this.currentID))
+    //this.currntConvDetail = await ConvDetail.create(this.currentID.conversationId)
+    //console.log("chat inspect in chat",JSON.stringify(this.currentID))
+    if (this.currntConvDetail.id === this.currentID.conversationId) {
+      this.MessageList = this.currntConvDetail.messages;
+      this.messages = this.currntConvDetail.messages;
+    }
 
   }
+
   /**
    * 改变输入框的Scroll容器的高度
    */
@@ -100,11 +106,14 @@ export struct MainPage {
       })
       return
     }
-    this.messages.push({ role: 'user', context: this.inputValue })
+    this.messages.push({ role: 'user', content: this.inputValue })
 
     //data.input.prompt = this.inputValue;
     this.userInputMessage = { role: 'user', content: this.inputValue }
     this.MessageList.push(this.userInputMessage)
+    let temp : ChatMessage = new ChatMessage('user',this.inputValue);
+    this.currntConvDetail.messages.push(temp);
+    this.currntConvDetail.updatedAt = Date.now().toString();
     this.inputValue = ''
     this.changeScrollHeight()
     this.listScroller.scrollEdge(Edge.Bottom)
@@ -114,13 +123,15 @@ export struct MainPage {
   /**
    * 回复消息
    */
-  async  replyMessage() {
-    this.messages.push({ role: 'assistant', context: 'Waiting for response.....' })
+  async replyMessage() {
+    this.messages.push({ role: 'assistant', content: 'Waiting for response.....' })
     let index = 0;
 
-    let reply = await makeChat({model:"qwen-plus"},this.MessageList);
-
-
+    let reply = await makeChat({ model: Constants.MODEL }, this.MessageList);
+    this.MessageList.push(reply)
+    let temp : ChatMessage = new ChatMessage(reply.role,reply.content);
+    this.currntConvDetail.messages.push(temp);
+    this.currntConvDetail.updatedAt = Date.now().toString();
     this.typer(index, reply.content)
 
   }
@@ -138,18 +149,19 @@ export struct MainPage {
       // this.messages[this.messages.length - 1].context = reply.substring(0, index)
       this.messages[this.messages.length - 1] = {
         role: 'assistant',
-        context: reply.substring(0, index)
+        content: reply.substring(0, index)
       }
       index++;
       this.typer(index, reply)
       this.listScroller.scrollEdge(Edge.Bottom)
-      console.log('zxxcxf--' + this.messages[this.messages.length - 1].context)
+      console.log('zxxcxf--' + this.messages[this.messages.length - 1].content)
     }, 50)
   }
 
   build() {
     Column() {
       //聊天区域
+      testBoard({displayMessage:this.currntConvDetail.id})
       Column() {
         List({
           space: 10,
@@ -163,7 +175,7 @@ export struct MainPage {
                   .width(40)
                   .aspectRatio(1)
                 Row() {
-                  Text(message.context)
+                  Text(message.content)
                     .backgroundColor(message.role === 'user' ? '#9489CD' : '#FDF8FF')
                     .fontSize(20)
                     .fontColor('#1C1B21')
@@ -220,7 +232,7 @@ export struct MainPage {
           })
       }
       .width('100%')
-      .height(this.scrollHeight || 50)//作为子组件时的备用措施
+      .height(this.scrollHeight || 50) //作为子组件时的备用措施
       .alignItems(VerticalAlign.Bottom)
       .backgroundColor(Color.White)
       .borderRadius({

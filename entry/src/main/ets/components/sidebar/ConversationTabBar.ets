@@ -1,26 +1,32 @@
-import {TabInfoBlock} from "./TabInfo"
-import {ConversationBasicInfo} from "../../common/entities/ConversationBasicInfo"
-import {ConvList} from "../../common/class/ConvListClass"
+import { TabInfoBlock } from "./TabInfo"
+import { ConversationBasicInfo } from "../../common/entities/ConversationBasicInfo"
+import { ConvList } from "../../common/class/ConvListClass"
 import { AppStorageV2 } from "@kit.ArkUI";
-import {KvUtil,ToastUtil} from '@pura/harmony-utils'
-import {ConversationID} from "../../common/class/ConversationID"
+import { KvUtil, ToastUtil } from '@pura/harmony-utils'
+import { ConversationID } from "../../common/class/ConversationID"
+
 @ComponentV2
 @Preview
 export struct ConversationTabBar {
-  @Param info : ConversationBasicInfo = {id:'',title:'',createdAt:'',updatedAt:''}
-  @Event deleteSelf : (id : string) => void = () => {};
-  @Event clickAndSwitch : (id : string) => void = () => {}
-  //convlist : ConvList  = AppStorageV2.connect(ConvList,() => new ConvList())!;
-  //currentID : ConversationID = AppStorageV2.connect(ConversationID,() => new ConversationID())!;
-  aboutToAppear(): void {
-    //ToastUtil.showLong(JSON.stringify(this.convlist))
-    //console.log("gcb28 child",this.convlist.currentConvID)
-    //console.log("chat inspect in conv child",JSON.stringify(this.currentID))
+  @Param info: ConversationBasicInfo = {
+    id: '',
+    title: '',
+    createdAt: '',
+    updatedAt: ''
   }
+  @Event deleteSelf: (id: string) => void = () => {
+  };
+  @Event clickAndSwitch: (id: string) => void = () => {
+  }
+
+  aboutToAppear(): void {
+
+  }
+
   build() {
-    Column({space:10}){
-      Button({type:ButtonType.Normal}){
-        TabInfoBlock({info:this.info})
+    Column({ space: 10 }) {
+      Button({ type: ButtonType.Normal }) {
+        TabInfoBlock({ info: this.info })
       }
       .borderRadius(20)
       .width('100%')
@@ -28,17 +34,17 @@ export struct ConversationTabBar {
       .padding(10)
       .backgroundColor(Color.White)
       .onClick(() => {
-          //this.convlist.currentConvID = this.info.id
-          //ToastUtil.showToast(JSON.stringify(this.info))
+        //this.convlist.currentConvID = this.info.id
+        //ToastUtil.showToast(JSON.stringify(this.info))
         this.clickAndSwitch(this.info.id)
       })
 
-      Button({type:ButtonType.Normal})
+      Button({ type: ButtonType.Normal })
         .width('5%')
         .height('5%')
         .offset({
-          x:100,
-          y:-90
+          x: 100,
+          y: -90
         })
         .borderRadius(20)
         .onClick(() => {

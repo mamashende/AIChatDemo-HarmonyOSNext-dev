@@ -8,7 +8,7 @@ const MONITOR_PREFIX = "__ob_"
 const USER_KEY_ConvList = "user_key_global_ConvList"
 
 @ObservedV2
-class ChatMessage implements Message {
+export  class ChatMessage implements Message {
   @Trace
   role: Role;
   @Trace
@@ -31,6 +31,7 @@ export class ConvDetail  {
   id: string = '';
   @Trace
   title : string = '';
+
   @Trace
   messages: ChatMessage[] = [];
   @Trace
@@ -44,6 +45,7 @@ export class ConvDetail  {
     let value = JSON.stringify(this).replaceAll(MONITOR_PREFIX, "")
     console.log("user info: " + value)
     //KVManager.get().put(USER_KEY, value)
+
     KvUtil.put(this.id,value);
 
 
